@@ -8,16 +8,16 @@ def getusername_paswd():
     # tests each character in password if one is uppercase or numeric
     for i in password:
         if i == i.isupper():
-            passUpper = True
+            pass_upper = True
         if i == i.isnumeric():
-            passNum = True
+            pass_num = True
 
     # tests if a special character is in password
     if "#" in password or "@" in password or "%" in password or "*" in password:
-        passSpecial = True
+        pass_special = True
 
     # Asks user to re-enter their password until it is valid
-    while len(password) > 7 and not(passUpper) and not(passNum) and not(passSpecial):
+    while len(password) > 7 and not(pass_upper) and not(pass_num) and not(pass_special):
         password = input('Please enter a valid password: ')
 
     return username, password
@@ -34,5 +34,4 @@ def main():
         secure_store(susername, spassword)
 
 
-if __name__ == "__main__":
-    main()
+main()
