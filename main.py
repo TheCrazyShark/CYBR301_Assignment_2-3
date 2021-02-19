@@ -1,6 +1,9 @@
 # Press Shift+F10 to execute it or replace it with your code.
 # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
 
+from Crypto.Cipher import AES
+
+
 def getusername_paswd():
     username = input('Please enter username: ')
     password = input('Please enter password: ')
@@ -38,16 +41,30 @@ def secure_store(username, password):
     print('Username: ' + username)
     print('Password: ' + password)
 
+    # 16 byte key used for encryption
+    key = b'\xa4\'\xf4\x0c"\xf9a,\x9c\xac\x12\xc1\x83n\x7ft'
+    # Allows for encryption. Uses EAX mode as it can detect unauthorized modifications
+    cipher = AES.new(key, AES.MODE_EAX)
+
+    # opens credential.dat file
+    with open('credential.dat', 'a') as f:
+        # encrypts the password
+        encrypted_password = cipher.encrypt(password.encode('utf-8'))
+
+        # writes username and password to file
+        f.write(username + "\n")
+        f.write(str(encrypted_password) + "\n")
+
+        print("Username and password written to credentials.dat")
+
+        # closes credential.dat file
+        f.close()
+
 
 def main():
-
-    getusername_paswd()
-
-    """
     susername, spassword = getusername_paswd()
     if susername and spassword:  # Need to change this to check getusername_paswd() returns 1
         secure_store(susername, spassword)
-    """
 
 
 if __name__ == "__main__":
