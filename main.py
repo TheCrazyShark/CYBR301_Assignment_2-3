@@ -1,65 +1,67 @@
-from Crypto.Util.Padding import pad
-from Crypto.Random import get_random_bytes
-from base64 import b64encode
 from Crypto.Cipher import AES
 
 def getusername_paswd():
-    username = input('Please enter username: <Enter your email address>')
-    password = input("Password rules are:"
-                   "\n 1. at least 8 characters, "
-                   "\n 2. has at least one alphabet,"
-                   "\n 3. has at least one digit, "
-                   "\n 4. has at a character in {#,$,%,*}"
-                   "\n Enter your password:")
-    pass_upper, pass_num, pass_special, pass_length, user_email, valid_both = False
+    username = input('Please enter username: ')
+    password = input('Please enter password: ')
 
-    # Tests to see if username is an email
+    pass_user, pass_upper, pass_lower, pass_num, pass_special = False, False, False, False, False
+
+    # tests if username contains @ to make sure it is an email address
     if "@" in username:
-        user_email = True
+        pass_user = True
 
     # tests each character in password if one is uppercase or numeric
     for i in password:
-        if i == i.isupper():
+        if i.isupper():
             pass_upper = True
-            continue
-        if i == i.isnumeric():
+        if i.islower():
+            pass_lower = True
+        if i.isnumeric():
             pass_num = True
-            continue
-        if pass_upper is True and pass_num is True:  # Breaks out of for loop if both credentials have been found
-            break
 
     # tests if a special character is in password
     if "#" in password or "@" in password or "%" in password or "*" in password:
         pass_special = True
 
-    # tests password length
-    if len(password) > 7:
-        pass_length = True
-
-    if pass_upper and pass_num and pass_special and pass_length and user_email:
+    # calls function again until a valid username and password is entered
+    if pass_user and len(password) > 7 and pass_upper and pass_lower and pass_num and pass_special:
+        print("Valid username and password!")
         return username, password
+
     else:
-        return None, None
+        print("Please enter a valid username/password.")
+        getusername_paswd()
 
 
 def secure_store(username, password):
-    output_file = "credential.dat"
-    fd = open(output_file, 'ra')
-
-    # Encrypt w/ AES algorithm
-    # encrypted_password=''
-    # Output user/pass to credential.dat
-
-    # If user/pass output to file correctly, display them
     print('Username: ' + username)
     print('Password: ' + password)
-    print("username and password saved in " + output_file)
+
+    # 16 byte key used for encryption
+    key = b'\xa4\'\xf4\x0c"\xf9a,\x9c\xac\x12\xc1\x83n\x7ft'
+    # Allows for encryption. Uses EAX mode as it can detect unauthorized modifications
+    cipher = AES.new(key, AES.MODE_EAX)
+
+    # opens credential.dat file
+    with open('credential.dat', 'a') as f:
+        # encrypts the password
+        encrypted_password = cipher.encrypt(password.encode('utf-8'))
+
+        # writes username and password to file
+        f.write(username + "\n")
+        f.write(str(encrypted_password) + "\n")
+
+        print("Username and password written to credentials.dat")
+
+        # closes credential.dat file
+        f.close()
 
 
 def main():
-    valid_username, valid_password = getusername_paswd()
-    if valid_username and valid_password:
-        secure_store(valid_username, valid_password)
+    susername, spassword = getusername_paswd()
+    if susername and spassword:
+        secure_store(susername, spassword)
 
 
-main()
+if __name__ == "__main__":
+    main()
