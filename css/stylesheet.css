@@ -1,0 +1,49 @@
+body {
+    font-family: 'Times New Roman', Times, serif;
+    /*background-color: #929292;*/
+    background-color: #530e04;
+    color: white;
+    background: linear-gradient(rgba(0,0,0,.5), rgba(0,0,0,.5)), url("../images/covid_background.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+#wrapper {
+    margin-left: 10%;
+    margin-right: 10%;
+    background-color: #1f2d29;
+    box-shadow: 1px 1px 1px black;
+    padding: 5px;
+}
+
+#header h1 {
+    text-align: center;
+}
+h1, h2 {
+    color: #ff0000;
+}
+
+#header ul {
+    list-style-type: none;
+    margin: -5px;
+    padding: 0;
+    overflow: hidden;
+    background-color: white;
+    position: -webkit-sticky; /* Safari */
+    position: sticky;
+    top: 0;
+}
+#header li {
+    float: left;
+}
+#header li a {
+    display: block;
+    color: black;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+#header li a:hover {
+    background-color: black;
+    color: white;
+}
