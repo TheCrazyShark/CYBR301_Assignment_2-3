@@ -30,7 +30,7 @@ def getusername_paswd():
 
     else:
         print("Please enter a valid username/password.")
-        getusername_paswd()
+        return "", ""
 
 
 def secure_store(username, password):
@@ -59,8 +59,10 @@ def secure_store(username, password):
 
 def main():
     susername, spassword = getusername_paswd()
-    if susername and spassword:
-        secure_store(susername, spassword)
+    while susername == "" or spassword == "":
+        susername, spassword = getusername_paswd()
+
+    secure_store(susername, spassword)
 
 
 if __name__ == "__main__":
