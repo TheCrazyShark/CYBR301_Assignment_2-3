@@ -20,7 +20,7 @@ def getusername_paswd():
             pass_num = True
 
     # tests if a special character is in password
-    if "#" in password or "@" in password or "%" in password or "*" in password:
+    if "#" in password or "@" in password or "%" in password or "*" in password or "$" in password:
         pass_special = True
 
     # calls function again until a valid username and password is entered
