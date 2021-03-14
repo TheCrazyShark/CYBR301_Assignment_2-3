@@ -50,7 +50,7 @@ def verify_hashed_passwd(username, passwd):
             pepper = list[2]
             hashed_password = list[3]
 
-            s.update(salt + pepper + passwd.encode('utf-8'))
+            s.update(salt.encode('utf-8') + pepper.encode('utf-8') + passwd.encode('utf-8'))
             tempo_hash = s.hexdigest()
             print(line)
 
