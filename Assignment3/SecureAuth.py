@@ -18,14 +18,16 @@ def secure_hashed_passwd(username, passwd):
     :return: True if given values are stored successfully in outfile var; else returns False
     '''
 
-    encoded_passwd = passwd.encode()
-    hpasswd = hashlib.sha3_224(encoded_passwd)   # SHA3-224
-    # Add salt
-    # add pepper
-    #use salt and pepper to hash 'hpasswd' using sha-3-224 algorithm
+    s = hashlib.sha3_224()  # initializes the hash algorithm
+    salt = uuid.uuid4().bytes  # Add salt
+    pepper = uuid.uuid4().bytes  # add pepper
+    salt_peppered_passwd = salt + pepper + bytes(passwd, 'utf-8')
+    salt_peppered_passwd = bytes(salt_peppered_passwd, 'utf-8')
 
+    print(salt_peppered_passwd)
+    s.update(salt_peppered_passwd)
 
-    #return salt,pepper,saltpepperdigest
+    return salt, pepper, s.hexdigest()  # return salt, pepper, saltpepperdigest
 
 
 def verify_hashed_passwd(username, passwd):
@@ -39,19 +41,26 @@ def verify_hashed_passwd(username, passwd):
     '''
     infile="hlogins.dat"    #databse file with username and hashed-password.
     fd=open(infile,"r")     #open the file to read
-
-    #read the infile line by line to retrive a matching row with first field value of username
+    s = hashlib.sha3_224()  #initialize hashing algorithm
     match = False
 
     for line in fd:
-        if (username == line):
+        list = line.split(',')
+        if list[0] == username:
             match = True
+            salt = list[1]
+            pepper = list[2]
+            hashedPassword = list[3]
 
-    if (not match):
+            tempo_hash = s.update(salt+pepper+passwd)
+            print(line)
+
+    if match:
+        if tempo_hash == hashedPassword:
+            return True
+    else:
         print("Authentication unsuccessful!")
         return False
-    else:
-        tempo_hash = passwd # Compute temp hash value of passwd
 
     #To read the file line by line, use a for loop.
     #Hint: split each line by a comma "," to get list of username, salt, pepper, and stored_hashpassword values.
