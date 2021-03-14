@@ -19,11 +19,11 @@ def secure_hashed_passwd(username, passwd):
     '''
 
     s = hashlib.sha3_224()  # initializes the hash algorithm
-    salt = uuid.uuid4().bytes  # Add salt
-    pepper = uuid.uuid4().bytes  # add pepper
+    salt = uuid.uuid4().hex  # Add salt
+    pepper = uuid.uuid4().hex  # add pepper
     #passwd = passwd.encode('utf-8')  # Convert password to bytes
 
-    s.update(salt + pepper + passwd.encode('utf-8'))
+    s.update(bytes(salt, 'utf-8') + bytes(pepper, 'utf-8') + passwd.encode('utf-8'))
 
     return salt, pepper, s.hexdigest()  # return salt, pepper, saltpepperdigest
 
@@ -52,12 +52,13 @@ def verify_hashed_passwd(username, passwd):
 
             s.update(salt.encode('utf-8') + pepper.encode('utf-8') + passwd.encode('utf-8'))
             tempo_hash = s.hexdigest()
-            print(line)
+            #print(line)
 
-    if match and (tempo_hash == hash()):
-        return True
+    if match:
+        if tempo_hash == hashed_password:
+            return True
     else:
-        print("Authentication unsuccessful!")
+        #print("Authentication unsuccessful!")
         return False
 
     #To read the file line by line, use a for loop.
