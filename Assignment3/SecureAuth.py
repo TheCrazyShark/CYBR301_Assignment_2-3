@@ -21,11 +21,9 @@ def secure_hashed_passwd(username, passwd):
     s = hashlib.sha3_224()  # initializes the hash algorithm
     salt = uuid.uuid4().bytes  # Add salt
     pepper = uuid.uuid4().bytes  # add pepper
-    salt_peppered_passwd = salt + pepper + bytes(passwd, 'utf-8')
-    salt_peppered_passwd = bytes(salt_peppered_passwd, 'utf-8')
+    #passwd = passwd.encode('utf-8')  # Convert password to bytes
 
-    print(salt_peppered_passwd)
-    s.update(salt_peppered_passwd)
+    s.update(salt + pepper + passwd.encode('utf-8'))
 
     return salt, pepper, s.hexdigest()  # return salt, pepper, saltpepperdigest
 
@@ -50,13 +48,14 @@ def verify_hashed_passwd(username, passwd):
             match = True
             salt = list[1]
             pepper = list[2]
-            hashedPassword = list[3]
+            hashed_password = list[3]
 
-            tempo_hash = s.update(salt+pepper+passwd)
+            s.update(salt + pepper + passwd.encode('utf-8'))
+            tempo_hash = s.hexdigest()
             print(line)
 
     if match:
-        if tempo_hash == hashedPassword:
+        if tempo_hash == hashed_password:
             return True
     else:
         print("Authentication unsuccessful!")
