@@ -54,9 +54,8 @@ def verify_hashed_passwd(username, passwd):
             tempo_hash = s.hexdigest()
             print(line)
 
-    if match:
-        if tempo_hash == hashed_password:
-            return True
+    if match and (tempo_hash == hash()):
+        return True
     else:
         print("Authentication unsuccessful!")
         return False
